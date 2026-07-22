@@ -1,0 +1,31 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadFromSourceBucket",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": "arn:aws:s3:::shivam-images-source-2026/*"
+    },
+    {
+      "Sid": "WriteToDestinationBucket",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject"
+      ],
+      "Resource": "arn:aws:s3:::shivam-images-processed-2026/*"
+    },
+    {
+      "Sid": "WriteCloudWatchLogs",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*"
+    }
+  ]
+}

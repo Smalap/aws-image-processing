@@ -1,2 +1,47 @@
+# ---- Secrets: never commit these ----
+.env
+.env.*
+*.pem
+*.ppk
+credentials
+.aws/
+**/aws_credentials*
+*access_key*
+*secret_key*
 
+# ---- Lambda layer build artifacts (large, rebuildable) ----
+build/
+python/
 pillow-build/
+pillow-layer/
+verify-check/
+*.zip
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+
+# ---- Terraform (if you add IaC later) ----
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+
+# ---- OS / editor ----
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# ---- Test images ----
+test-images/
+*.jpg
+*.jpeg
+*.png
+!docs/*.png

@@ -1,0 +1,24 @@
+{
+  "Records": [
+    {
+      "eventVersion": "2.1",
+      "eventSource": "aws:s3",
+      "awsRegion": "us-east-1",
+      "eventTime": "2026-07-22T07:10:50.000Z",
+      "eventName": "ObjectCreated:Put",
+      "s3": {
+        "s3SchemaVersion": "1.0",
+        "configurationId": "image-processor-trigger",
+        "bucket": {
+          "name": "shivam-images-source-2026",
+          "arn": "arn:aws:s3:::shivam-images-source-2026"
+        },
+        "object": {
+          "key": "test.jpg",
+          "size": 3847221,
+          "eTag": "0123456789abcdef0123456789abcdef"
+        }
+      }
+    }
+  ]
+}
