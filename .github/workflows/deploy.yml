@@ -93,19 +93,27 @@ jobs:
           echo "Package size: $(du -h function.zip | cut -f1)"
 
       # TEMPORARY DIAGNOSTIC — remove once OIDC is confirmed working.
-      # GitHub masks the secret's value in logs, but not its length, so this
-      # reveals stray whitespace or a truncated paste without leaking the ARN.
-      - name: Check secret shape
-        run: |
-          RAW="${{ secrets.AWS_DEPLOY_ROLE_ARN }}"
-          echo "Length: ${#RAW}   (expected exactly 61)"
-          echo "Starts with 'arn:aws:iam::': $(case "$RAW" in arn:aws:iam::*) echo yes;; *) echo NO;; esac)"
-          echo "Ends with 'github-actions-image-processor': $(case "$RAW" in *github-actions-image-processor) echo yes;; *) echo NO;; esac)"
+      # Decodes the OIDC token GitHub issues and prints its claims, so we can
+      # see the exact `sub` and `aud` AWS is being asked to trust. Prints only
+      # the decoded claims, never the signed token itself.
+      - name: Show OIDC token claims
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tok = await core.getIDToken('sts.amazonaws.com');
+            const claims = JSON.parse(Buffer.from(tok.split('.')[1], 'base64url').toString());
+            console.log('sub =', claims.sub);
+            console.log('aud =', claims.aud);
+            console.log('iss =', claims.iss);
+            console.log('repository =', claims.repository);
+            console.log('ref =', claims.ref);
 
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          # Role ARN hardcoded deliberately: it is not a secret (account ID +
+          # role name), and this removes GitHub-secret typos as a failure mode.
+          role-to-assume: arn:aws:iam::188289743200:role/github-actions-image-processor
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Update function code
