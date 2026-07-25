@@ -92,6 +92,16 @@ jobs:
           cd ..
           echo "Package size: $(du -h function.zip | cut -f1)"
 
+      # TEMPORARY DIAGNOSTIC — remove once OIDC is confirmed working.
+      # GitHub masks the secret's value in logs, but not its length, so this
+      # reveals stray whitespace or a truncated paste without leaking the ARN.
+      - name: Check secret shape
+        run: |
+          RAW="${{ secrets.AWS_DEPLOY_ROLE_ARN }}"
+          echo "Length: ${#RAW}   (expected exactly 61)"
+          echo "Starts with 'arn:aws:iam::': $(case "$RAW" in arn:aws:iam::*) echo yes;; *) echo NO;; esac)"
+          echo "Ends with 'github-actions-image-processor': $(case "$RAW" in *github-actions-image-processor) echo yes;; *) echo NO;; esac)"
+
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
