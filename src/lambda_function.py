@@ -17,9 +17,9 @@ DEST_PREFIX     (default "")    Optional key prefix, e.g. "resized/".
 """
 
 import io
-import os
 import json
 import logging
+import os
 import urllib.parse
 
 import boto3
@@ -183,11 +183,11 @@ def lambda_handler(event, context):
 
         except ClientError as exc:
             code = exc.response["Error"]["Code"]
-            logger.error("S3 error (%s) on %s", code, key, exc_info=True)
+            logger.exception("S3 error (%s) on %s", code, key)
             raise  # Re-raise: let Lambda retry, then fall through to the DLQ.
 
         except Exception:
-            logger.error("Unexpected failure on %s", key, exc_info=True)
+            logger.exception("Unexpected failure on %s", key)
             raise
 
     summary = {"processed": len(results), "results": results}
