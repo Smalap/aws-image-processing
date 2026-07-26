@@ -92,22 +92,6 @@ jobs:
           cd ..
           echo "Package size: $(du -h function.zip | cut -f1)"
 
-      # TEMPORARY DIAGNOSTIC — remove once OIDC is confirmed working.
-      # Decodes the OIDC token GitHub issues and prints its claims, so we can
-      # see the exact `sub` and `aud` AWS is being asked to trust. Prints only
-      # the decoded claims, never the signed token itself.
-      - name: Show OIDC token claims
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const tok = await core.getIDToken('sts.amazonaws.com');
-            const claims = JSON.parse(Buffer.from(tok.split('.')[1], 'base64url').toString());
-            console.log('sub =', claims.sub);
-            console.log('aud =', claims.aud);
-            console.log('iss =', claims.iss);
-            console.log('repository =', claims.repository);
-            console.log('ref =', claims.ref);
-
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
